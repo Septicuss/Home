@@ -7,6 +7,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * Main Utility class used for creating .yml files. To add a new .yml file, it
+ * must be added as an enum to the {@link FileType}.
+ */
 public class Files {
 
 	private static JavaPlugin plugin;

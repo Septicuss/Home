@@ -2,6 +2,7 @@ package oxygen;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import home.HomeLoader;
 import oxygen.data.DatabaseHandler;
 import oxygen.objects.LoaderHandler;
 import oxygen.objects.menu.MenuListener;
@@ -37,14 +38,14 @@ public class Oxygen extends JavaPlugin {
 	 * PUT THE EXTERNAL IMPLEMENTATION (OUT OF OXYGEN) LOADING HERE
 	 */
 	public static void loadExternal() {
-
+		HomeLoader.load();
 	}
 
 	/*
 	 * PUT THE EXTERNAL IMPLEMENTATION (OUT OF OXYGEN) UNLOADING HERE
 	 */
 	public static void unloadExternal() {
-
+		HomeLoader.unload();
 	}
 
 	public static void unload() {

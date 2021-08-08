@@ -17,6 +17,10 @@ import org.bukkit.World;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
+/**
+ * Utility class used for various Data-related tasks, which includes
+ * serialization, simple String conversion and random numbers.
+ */
 public class Data {
 
 	// Variables

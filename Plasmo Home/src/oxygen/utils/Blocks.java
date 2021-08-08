@@ -7,6 +7,11 @@ import org.bukkit.persistence.PersistentDataType;
 
 import oxygen.Oxygen;
 
+/**
+ * Utility class, used to manage blocks and their data in the world. Mostly
+ * stores {@linkplain String} data using a chunks
+ * {@link PersistentDataContainer}.
+ */
 public class Blocks {
 
 	/**
@@ -14,10 +19,8 @@ public class Blocks {
 	 * To-do:
 	 * 
 	 * Set<Block> getBlocksKeyed(String key)
-	 * 
+	 * (Maybe by saving all blocks containing data in a single (main) block?)
 	 */
-
-	// Setting local data
 
 	public static String getData(Block block, String key) {
 		if (isEmpty(block)) {

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Utility class for Inventory-related operations.
+ */
 public class Inventory {
 
 	/**
@@ -43,7 +46,7 @@ public class Inventory {
 	 * @param coords
 	 * @return A chest inventory slot
 	 */
-	public static int getSlotFromCoords(int[] coords) {
+	private static int getSlotFromCoords(int[] coords) {
 		int x = coords[0];
 		int y = coords[1];
 
@@ -57,7 +60,7 @@ public class Inventory {
 	 * @param slot
 	 * @return An array with x and y
 	 */
-	public static int[] getCoordPointFromSlot(int slot) {
+	private static int[] getCoordPointFromSlot(int slot) {
 		int y = slot / 9;
 		int x = slot - (y * 9);
 

@@ -20,7 +20,6 @@ public class OxygenPlayer {
 	// Main Getter
 
 	/**
-	 * 
 	 * Loads the given player from the OxygenPlayerLoader. Depending on whether the
 	 * player is already loaded, the player is loaded from the cache. Otherwise from
 	 * the database.

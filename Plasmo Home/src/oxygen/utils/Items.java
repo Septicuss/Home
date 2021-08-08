@@ -3,6 +3,7 @@ package oxygen.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang.WordUtils;
@@ -20,7 +21,11 @@ import com.google.common.collect.Lists;
 
 import net.md_5.bungee.api.ChatColor;
 import oxygen.Oxygen;
+import oxygen.data.DataContainer;
 
+/**
+ * Utility class for {@link ItemStack} related operations.
+ */
 public class Items {
 
 	public static void addToLore(ItemStack item, String... string) {
@@ -198,6 +203,14 @@ public class Items {
 	public static ItemStack setAmount(ItemStack item, int amount) {
 		item.setAmount(amount);
 		return item;
+	}
+
+	public static void setDataContainer(ItemStack item, DataContainer data) {
+		for (Entry<String, String> entry : data.getData().entrySet())
+			if (entry.getKey() == null || entry.getValue() == null)
+				continue;
+			else
+				setData(item, entry.getKey(), entry.getValue());
 	}
 
 	public static void setData(ItemStack item, String key, String data) {
