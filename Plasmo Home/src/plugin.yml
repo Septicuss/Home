@@ -1,0 +1,5 @@
+name: Oxygen
+description: Oxygen
+version: 1.0
+main: oxygen.Oxygen
+api-version: 1.16
