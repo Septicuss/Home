@@ -18,11 +18,11 @@ public class HomeCommands implements CommandExecutor {
 			return true;
 		}
 
-		homeCommand(sender, args);
+		parseHomeCommand(sender, args);
 		return true;
 	}
 	
-	private void homeCommand(CommandSender sender, String[] args) {
+	private void parseHomeCommand(CommandSender sender, String[] args) {
 		
 	}
 
