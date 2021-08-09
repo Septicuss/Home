@@ -16,7 +16,7 @@ public class Files {
 	private static JavaPlugin plugin;
 
 	public enum FileType {
-
+		HOMEWORLDS
 	}
 
 	public static void load(final JavaPlugin plugin) {

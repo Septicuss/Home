@@ -1,6 +1,7 @@
 package oxygen.utils;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -17,6 +18,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import com.google.common.collect.Lists;
 
 import net.md_5.bungee.api.ChatColor;
@@ -103,6 +106,29 @@ public class Items {
 
 		return item;
 
+	}
+
+	public static ItemStack createSkullTexture(String name, String url, String... lore) {
+		ItemStack skull = create(Material.PLAYER_HEAD, name, lore);
+		if (url == null || url.isEmpty()) {
+			return skull;
+		}
+		if (!url.startsWith("http://textures.minecraft.net/texture/"))
+			url = "http://textures.minecraft.net/texture/" + url;
+		try {
+			SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+			skullMeta.setOwner("Septicuss");
+
+			PlayerProfile profile = skullMeta.getPlayerProfile();
+			profile.setProperty(new ProfileProperty("textures", new String(
+					Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes()))));
+
+			skullMeta.setPlayerProfile(profile);
+			skull.setItemMeta(skullMeta);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return skull;
 	}
 
 	public static List<String> getColoredLore(List<String> oldLore) {
