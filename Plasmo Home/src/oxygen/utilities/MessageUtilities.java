@@ -3,11 +3,17 @@ package oxygen.utilities;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.command.CommandSender;
+
 import net.md_5.bungee.api.ChatColor;
 
 public class MessageUtilities {
 
 	private final static char COLOR_CHAR = ChatColor.COLOR_CHAR;
+
+	public static void sendMessage(CommandSender sender, String message) {
+		sender.sendMessage(color(message));
+	}
 
 	/**
 	 * 
