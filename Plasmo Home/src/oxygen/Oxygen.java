@@ -2,57 +2,67 @@ package oxygen;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import home.HomeLoader;
-import oxygen.data.DatabaseHandler;
-import oxygen.objects.LoaderHandler;
-import oxygen.objects.menu.MenuListener;
-import oxygen.utils.Files;
+import oxygen.data.DatabaseService;
+import oxygen.menu.MenuService;
+import oxygen.player.OxygenPlayerService;
+import oxygen.utilities.BlockUtilities;
+import oxygen.utilities.FileUtilities;
+import oxygen.utilities.ItemUtilities;
 
 public class Oxygen extends JavaPlugin {
 
-	private static Oxygen instance;
+	// # Services #
+	private DatabaseService databaseService;
+	private MenuService menuService;
+	private OxygenPlayerService oxygenPlayerService;
 
+	// # Utilities #
+	private BlockUtilities blockUtilities;
+	private FileUtilities fileUtilities;
+	private ItemUtilities itemUtilities;
+
+	private static Oxygen oxygen;
+
+	@Override
 	public void onEnable() {
-		instance = this;
-		load();
-		loadExternal();
+		oxygen = this;
+		JavaPlugin instance = oxygen;
+
+		// - Services
+		databaseService = new DatabaseService(instance);
+		menuService = new MenuService(instance);
+		oxygenPlayerService = new OxygenPlayerService(databaseService);
+
+		// - Utilities
+		blockUtilities = new BlockUtilities(instance);
+		fileUtilities = new FileUtilities(instance);
+		itemUtilities = new ItemUtilities(instance);
 	}
 
+	@Override
 	public void onDisable() {
-		unloadExternal();
-		unload();
+		oxygenPlayerService.saveAll();
+		menuService.closeMenus();
+		databaseService.closeConnection();
 	}
 
-	public static void load() {
-
-		// -- Listeners
-		new DatabaseHandler(instance);
-		new MenuListener(instance);
-
-		// -- Handlers
-		LoaderHandler.load();
-		Files.load(instance);
+	public static Oxygen get() {
+		return oxygen;
 	}
 
-	/*
-	 * PUT THE EXTERNAL IMPLEMENTATION (OUT OF OXYGEN) LOADING HERE
-	 */
-	public static void loadExternal() {
-		HomeLoader.load();
+	public OxygenPlayerService getOxygenPlayerService() {
+		return oxygenPlayerService;
 	}
 
-	/*
-	 * PUT THE EXTERNAL IMPLEMENTATION (OUT OF OXYGEN) UNLOADING HERE
-	 */
-	public static void unloadExternal() {
-		HomeLoader.unload();
+	public BlockUtilities getBlockUtilities() {
+		return blockUtilities;
 	}
 
-	public static void unload() {
-		LoaderHandler.unload();
+	public FileUtilities getFileUtilities() {
+		return fileUtilities;
 	}
 
-	public static Oxygen getInstance() {
-		return instance;
+	public ItemUtilities getItemUtilities() {
+		return itemUtilities;
 	}
 }

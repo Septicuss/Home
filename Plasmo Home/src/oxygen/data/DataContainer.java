@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import oxygen.utils.Data;
+import oxygen.utilities.DataUtilities;
 
 public class DataContainer implements Serializable {
 
@@ -86,11 +86,11 @@ public class DataContainer implements Serializable {
 	// -- Serialization
 
 	public static DataContainer deserialize(String serializedContainer) {
-		return (DataContainer) Data.fromBase64(serializedContainer);
+		return (DataContainer) DataUtilities.fromBase64(serializedContainer);
 	}
 
 	public String serialize() {
-		return Data.toBase64(this);
+		return DataUtilities.toBase64(this);
 	}
 
 }
