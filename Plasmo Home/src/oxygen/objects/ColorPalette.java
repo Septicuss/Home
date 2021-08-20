@@ -15,15 +15,15 @@ public class ColorPalette {
 	}
 
 	public String getFirstColor() {
-		return getColor(-1);
+		return getColor(1);
 	}
 
 	public String getSecondColor() {
-		return getColor(0);
+		return getColor(2);
 	}
 
 	public String getColor(int index) {
-		return MessageUtilities.color(hexColors[index + 1]);
+		return MessageUtilities.color(hexColors[index - 1]);
 	}
 
 }

@@ -2,6 +2,7 @@ package oxygen;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import home.HomeService;
 import oxygen.data.DatabaseService;
 import oxygen.menu.MenuService;
 import oxygen.player.OxygenPlayerService;
@@ -37,6 +38,9 @@ public class Oxygen extends JavaPlugin {
 		blockUtilities = new BlockUtilities(instance);
 		fileUtilities = new FileUtilities(instance);
 		itemUtilities = new ItemUtilities(instance);
+
+		// - External
+		new HomeService(oxygen);
 	}
 
 	@Override
@@ -48,6 +52,10 @@ public class Oxygen extends JavaPlugin {
 
 	public static Oxygen get() {
 		return oxygen;
+	}
+
+	public MenuService getMenuService() {
+		return menuService;
 	}
 
 	public OxygenPlayerService getOxygenPlayerService() {
