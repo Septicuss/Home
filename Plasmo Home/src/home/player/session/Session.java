@@ -33,6 +33,8 @@ public class Session {
 	public boolean isSet(String key) {
 		return this.container.isSet(key);
 	}
+	
+	// - Object
 
 	@Override
 	public int hashCode() {

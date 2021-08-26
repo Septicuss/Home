@@ -45,7 +45,7 @@ public class BlockUtilities {
 		save(block, blockContainer);
 	}
 
-	private void save(Block block, PersistentDataContainer blockContainer) {
+	public void save(Block block, PersistentDataContainer blockContainer) {
 		final PersistentDataContainer chunkContainer = block.getChunk().getPersistentDataContainer();
 		final NamespacedKey key = getNamespacedKey(block);
 
@@ -56,7 +56,7 @@ public class BlockUtilities {
 		}
 	}
 
-	private PersistentDataContainer getBlockPersistentDataContainer(Block block) {
+	public PersistentDataContainer getBlockPersistentDataContainer(Block block) {
 		final PersistentDataContainer chunkContainer = block.getChunk().getPersistentDataContainer();
 		final PersistentDataContainer blockContainer;
 

@@ -1,9 +1,17 @@
 package oxygen.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
+import org.bukkit.NamespacedKey;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import oxygen.Oxygen;
 import oxygen.utilities.DataUtilities;
 
 public class DataContainer implements Serializable {
@@ -19,22 +27,21 @@ public class DataContainer implements Serializable {
 		this.data = data;
 	}
 
-	public String get(String key) {
-		return data.getOrDefault(key, null);
-	}
+	public DataContainer(PersistentDataContainer pdc) {
+		this.data = new HashMap<>();
 
-	public void set(String key, String value) {
-		if (value == null) {
-			data.remove(key);
-			return;
+		for (NamespacedKey namespacedKey : pdc.getKeys()) {
+			String key = namespacedKey.getKey();
+			String value = pdc.get(namespacedKey, PersistentDataType.STRING);
+
+			if (key == null || value == null)
+				continue;
+
+			data.put(key, value);
 		}
-
-		data.put(key, value);
 	}
 
-	public void clear() {
-		getData().clear();
-	}
+	// -- Values
 
 	public DataContainer getByValue(String value) {
 		DataContainer otherContainer = new DataContainer();
@@ -48,12 +55,49 @@ public class DataContainer implements Serializable {
 		return otherContainer;
 	}
 
-	public boolean isSet(String key) {
-		return data.containsKey(key);
+	public void set(String key, String value) {
+		if (value == null) {
+			data.remove(key);
+			return;
+		}
+
+		data.put(key, value);
+	}
+
+	public void toPersistentDataContainer(PersistentDataContainer pdc) {
+		JavaPlugin plugin = Oxygen.get();
+
+		for (NamespacedKey key : pdc.getKeys()) {
+			pdc.remove(key);
+		}
+
+		for (Entry<String, String> entry : data.entrySet()) {
+			NamespacedKey namespacedKey = getNamespacedKey(plugin, entry.getKey());
+			String value = entry.getValue();
+
+			pdc.set(namespacedKey, PersistentDataType.STRING, value);
+			System.out.println("To persistent data container \"" + entry.getKey() + "\"");
+		}
+	}
+
+	private NamespacedKey getNamespacedKey(JavaPlugin plugin, String key) {
+		return new NamespacedKey(plugin, key);
 	}
 
 	public HashMap<String, String> getData() {
 		return this.data;
+	}
+
+	public String get(String key) {
+		return data.getOrDefault(key, null);
+	}
+
+	public void clear() {
+		getData().clear();
+	}
+
+	public boolean isSet(String key) {
+		return data.containsKey(key);
 	}
 
 	// -- Object
@@ -81,6 +125,35 @@ public class DataContainer implements Serializable {
 		int result = 1;
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
 		return result;
+	}
+
+	// -- Debug
+	public List<String> getDebug() {
+		List<String> debugMessage = new ArrayList<>();
+
+		debugMessage.add(" ");
+		debugMessage.add("-- DataContainer debug --");
+
+		for (Entry<String, String> entry : this.data.entrySet()) {
+			debugMessage.add("- " + entry.getKey() + " : " + entry.getValue());
+		}
+
+		debugMessage.add("-- End --");
+
+		return debugMessage;
+	}
+
+	public void printDebug() {
+
+		System.out.println(" ");
+		System.out.println("-- DataContainer debug --");
+
+		for (Entry<String, String> entry : this.data.entrySet()) {
+			System.out.println("- " + entry.getKey() + " : " + entry.getValue());
+		}
+
+		System.out.println("-- End --");
+
 	}
 
 	// -- Serialization
