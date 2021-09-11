@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import home.HomeService;
 import home.commands.HomeCommand;
 import home.worlds.WorldHandler;
+import oxygen.Oxygen;
 import oxygen.data.DataContainer;
 import oxygen.objects.ColorPalette;
 import oxygen.utilities.DataUtilities;
@@ -129,7 +130,7 @@ public class AdminCommand extends HomeCommand {
 			message(sender, " ");
 			message(sender, getDivider());
 			message(sender, p.getFirstColor() + "§lLocation Help [These commands are world specific!]");
-			message(sender, p.getFirstColor() + "/...location " + p.getSecondColor() + "set [name]");
+			message(sender, p.getFirstColor() + "/...location " + p.getSecondColor() + "create [name]");
 			message(sender, p.getFirstColor() + "/...location " + p.getSecondColor() + "remove [name]");
 			message(sender, p.getFirstColor() + "/...location " + p.getSecondColor() + "teleport [name] (player)");
 			message(sender, p.getFirstColor() + "/...location " + p.getSecondColor() + "list ");
@@ -138,8 +139,8 @@ public class AdminCommand extends HomeCommand {
 			return;
 		}
 
-		// /admin location set/remove [name]
-		if (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("remove")) {
+		// /admin location create/remove [name]
+		if (args[1].equalsIgnoreCase("create") || args[1].equalsIgnoreCase("remove")) {
 			if (args.length == 2) {
 				message(sender, p.getColor(3) + "[!] Missing [name] argument!");
 				return;
@@ -147,21 +148,16 @@ public class AdminCommand extends HomeCommand {
 
 			Player player = (Player) sender;
 
-			Location location = player.getLocation();
-			String worldName = location.getWorld().getName();
+			
 
 			String locationName = args[2];
 			String path = String.format("locations.%s", locationName);
 
 			boolean remove = args[1].equalsIgnoreCase("remove");
-			String newValue = (remove ? null : DataUtilities.serializeLocation(location));
+			
+			HomeService.get().getLocationService().setSelectionStatus(player, 1);
 
-			DataContainer container = getWorldContainer(worldName);
-			container.set(path, newValue);
-			saveWorldContainer(worldName, container);
-
-			String message = p.getFirstColor() + "Location \"%s\" successfully %s.";
-			message = String.format(message, locationName, (remove ? "removed" : "set"));
+			String message = p.getFirstColor() + "Select first border pos";
 
 			message(player, message);
 			return;

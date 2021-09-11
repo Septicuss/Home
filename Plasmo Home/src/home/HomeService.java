@@ -1,6 +1,7 @@
 package home;
 
 import home.commands.CommandHandler;
+import home.locations.LocationService;
 import home.player.menu.PlayerMenuListener;
 import home.player.session.SessionHandler;
 import home.worlds.WorldHandler;
@@ -15,6 +16,7 @@ public class HomeService {
 	private CommandHandler commandHandler;
 	private SessionHandler sessionHandler;
 	private WorldHandler worldHandler;
+	private LocationService locationService;
 
 	public HomeService(Oxygen plugin) {
 
@@ -22,7 +24,8 @@ public class HomeService {
 		commandHandler = new CommandHandler(plugin);
 		sessionHandler = new SessionHandler();
 		worldHandler = new WorldHandler(plugin);
-
+		locationService = new LocationService(plugin);
+		
 		new PlayerMenuListener(plugin);
 	}
 
@@ -41,5 +44,10 @@ public class HomeService {
 	public WorldHandler getWorldHandler() {
 		return worldHandler;
 	}
+	
+	public LocationService getLocationService() {
+		return locationService;
+	}
+
 
 }
