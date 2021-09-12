@@ -21,7 +21,7 @@ public class LocationListener implements Listener {
 	public LocationListener(Oxygen plugin, LocationService service) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.service = service;
-		data = new HashMap<Player, HashMap<String, Location>>();
+		data = new HashMap<>();
 	}
 
 	@EventHandler
