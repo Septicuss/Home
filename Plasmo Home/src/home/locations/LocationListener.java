@@ -10,75 +10,71 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import home.HomeService;
+import home.player.session.Session;
 import oxygen.Oxygen;
 import oxygen.objects.Cuboid;
+import oxygen.utilities.DataUtilities;
 
 public class LocationListener implements Listener {
 
 	private LocationService service;
-	private HashMap<Player, HashMap<String, Location>> data;
 
 	public LocationListener(Oxygen plugin, LocationService service) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.service = service;
-		data = new HashMap<>();
 	}
 
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
 
 		Player player = e.getPlayer();
-		int selectionStatus = service.getSelectionStatus(player);
-		
+		Session session = HomeService.get().getSessionHandler().getSession(player.getName());
+		int selectionStatus = Integer.parseInt(session.get("selectionStatus"));
 
 		if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK))
 			return;
-		
 		if (e.getItem() == null)
 			return;
 		if (!(e.getItem().getType() == Material.BLAZE_ROD))
 			return;
-		
-		if (selectionStatus == 0) {
+
+		if (!session.isSet("selectionStatus")) {
 			player.sendMessage("You are gay");
 			e.getItem().setAmount(0);
 			return;
 		}
-		System.out.print(4);
 		if (!(player.isOp()))
 			return;
 
 		if (selectionStatus == 1) {
 			Location loc1 = e.getClickedBlock().getLocation();
-			HashMap<String, Location> locs = new HashMap<String, Location>();
-			locs.put("loc1", loc1);
-			data.put(player, locs);
-			
-			service.setSelectionStatus(player, 2);
+			session.set("loc1", DataUtilities.serializeLocation(loc1));
+			session.set("selectionStatus", "2");
+
 			player.sendMessage("Select second border pos");
 		}
 		if (selectionStatus == 2) {
 			Location loc2 = e.getClickedBlock().getLocation();
-			HashMap<String, Location> locs = data.get(player);
-			locs.put("loc2", loc2);
-			
-			service.setSelectionStatus(player, 3);
+			session.set("loc2", DataUtilities.serializeLocation(loc2));
+			session.set("selectionStatus", "3");
+
 			player.sendMessage("Select spawn pos");
 		}
 		if (selectionStatus == 3) {
 			Location spawnLoc = e.getClickedBlock().getLocation();
-			HashMap<String, Location> locs = data.get(player);
+			Cuboid border = new Cuboid((Location) DataUtilities.deserializeLocation(session.get("loc1")),
+					(Location) DataUtilities.deserializeLocation(session.get("loc2")));
 
-			Cuboid border = new Cuboid(locs.get("loc1"), locs.get("loc2"));
-			HomeLocation location = new HomeLocation("test", border, spawnLoc);
+			HomeLocation location = new HomeLocation(session.get("locationName"), border, spawnLoc);
+
 			HashMap<String, HomeLocation> locations = service.getLocations();
 			locations.put("test", location);
 			service.setLocations(locations);
 
-			service.setSelectionStatus(player, 0);
 			e.getItem().setAmount(0);
-			data.remove(player);
-			
+			HomeService.get().getSessionHandler().clearSession(player.getName());
+
 			player.sendMessage("Location successfully created");
 		}
 

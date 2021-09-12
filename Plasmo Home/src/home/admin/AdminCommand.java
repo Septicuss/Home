@@ -148,14 +148,12 @@ public class AdminCommand extends HomeCommand {
 
 			Player player = (Player) sender;
 
-			
-
 			String locationName = args[2];
-			String path = String.format("locations.%s", locationName);
 
 			boolean remove = args[1].equalsIgnoreCase("remove");
-			
-			HomeService.get().getLocationService().setSelectionStatus(player, 1);
+
+			HomeService.get().getSessionHandler().getSession(player.getName()).set("selectionStatus", "1");
+			HomeService.get().getSessionHandler().getSession(player.getName()).set("locationName", locationName);
 
 			String message = p.getFirstColor() + "Select first border pos";
 
