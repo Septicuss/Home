@@ -15,11 +15,13 @@ public class LocationService {
 
 	private FileUtilities fileUtilities;
 	private HashMap<String, HomeLocation> locations;
+	private String fileName;
 
 	public LocationService(Oxygen plugin) {
 
 		fileUtilities = plugin.getFileUtilities();
-		locations = loadLocations("locations");
+		fileName = "locations";
+		locations = loadLocations();
 		new LocationListener(plugin, this);
 
 	}
@@ -33,11 +35,16 @@ public class LocationService {
 
 	public void setLocations(HashMap<String, HomeLocation> locs) {
 		this.locations = locs;
-		saveLocations(locations, "locations");
+		saveLocations(locations);
+	}
+
+	public void removeLocation(String locName) {
+		this.locations.remove(locName);
+		removeLocFromData(locName);
 	}
 
 	// load/save
-	private HashMap<String, HomeLocation> loadLocations(String fileName) {
+	private HashMap<String, HomeLocation> loadLocations() {
 
 		FileConfiguration data = fileUtilities.getFileConfiguration(fileName);
 
@@ -45,9 +52,9 @@ public class LocationService {
 		if (!data.isSet("locations"))
 			return locations;
 
-		for (String key : data.getConfigurationSection("location").getKeys(false)) {
+		for (String key : data.getConfigurationSection("locations").getKeys(false)) {
 
-			String path = String.format("location.%s.", key);
+			String path = String.format("locations.%s.", key);
 
 			String serializedUpperLocation = data.getString(path + "border.high");
 			Location upperLocation = DataUtilities.deserializeLocation(serializedUpperLocation);
@@ -65,22 +72,30 @@ public class LocationService {
 		return locations;
 	}
 
-	private void saveLocations(HashMap<String, HomeLocation> locs, String fileName) {
+	private void saveLocations(HashMap<String, HomeLocation> locs) {
 		FileConfiguration data = fileUtilities.getFileConfiguration(fileName);
 
 		for (Entry<String, HomeLocation> entry : locs.entrySet()) {
 			String key = entry.getKey();
 			HomeLocation value = entry.getValue();
 
-			data.set(String.format("location.%s.border.high", key),
+			data.set(String.format("locations.%s.border.high", key),
 					DataUtilities.serializeLocation(value.getBorder().getUpperLocation()));
-			data.set(String.format("location.%s.border.low", key),
+			data.set(String.format("locations.%s.border.low", key),
 					DataUtilities.serializeLocation(value.getBorder().getLowerLocation()));
-			data.set(String.format("location.%s.spawnpoint", key),
+			data.set(String.format("locations.%s.spawnpoint", key),
 					DataUtilities.serializeLocation(value.getSpawnPoint()));
 
 		}
 		fileUtilities.saveFileConfiguration("locations", data);
+	}
+
+	private void removeLocFromData(String locName) {
+
+		FileConfiguration data = fileUtilities.getFileConfiguration(fileName);
+		data.getConfigurationSection("locations").set(locName, null);
+		fileUtilities.saveFileConfiguration("locations", data);
+
 	}
 
 }

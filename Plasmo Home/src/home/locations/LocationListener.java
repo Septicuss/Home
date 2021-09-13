@@ -29,6 +29,9 @@ public class LocationListener implements Listener {
 	public void onInteract(PlayerInteractEvent e) {
 
 		Player player = e.getPlayer();
+
+		if (!HomeService.get().getSessionHandler().isExist(player.getName()))
+			return;
 		Session session = HomeService.get().getSessionHandler().getSession(player.getName());
 		int selectionStatus = Integer.parseInt(session.get("selectionStatus"));
 
@@ -36,9 +39,10 @@ public class LocationListener implements Listener {
 			return;
 		if (e.getItem() == null)
 			return;
+		
 		if (!(e.getItem().getType() == Material.BLAZE_ROD))
 			return;
-
+	
 		if (!session.isSet("selectionStatus")) {
 			player.sendMessage("You are gay");
 			e.getItem().setAmount(0);
@@ -69,7 +73,7 @@ public class LocationListener implements Listener {
 			HomeLocation location = new HomeLocation(session.get("locationName"), border, spawnLoc);
 
 			HashMap<String, HomeLocation> locations = service.getLocations();
-			locations.put("test", location);
+			locations.put(session.get("locationName"), location);
 			service.setLocations(locations);
 
 			e.getItem().setAmount(0);

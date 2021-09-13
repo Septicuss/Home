@@ -1,5 +1,6 @@
 package home.admin;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -10,14 +11,13 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import home.HomeService;
 import home.commands.HomeCommand;
-import home.worlds.WorldHandler;
-import oxygen.Oxygen;
-import oxygen.data.DataContainer;
+import home.locations.HomeLocation;
 import oxygen.objects.ColorPalette;
-import oxygen.utilities.DataUtilities;
+import oxygen.player.OxygenPlayer;
 import oxygen.utilities.MessageUtilities;
 
 public class AdminCommand extends HomeCommand {
@@ -139,23 +139,46 @@ public class AdminCommand extends HomeCommand {
 			return;
 		}
 
-		// /admin location create/remove [name]
-		if (args[1].equalsIgnoreCase("create") || args[1].equalsIgnoreCase("remove")) {
+		// /admin location create [name]
+		if (args[1].equalsIgnoreCase("create")) {
 			if (args.length == 2) {
 				message(sender, p.getColor(3) + "[!] Missing [name] argument!");
 				return;
 			}
-
 			Player player = (Player) sender;
-
+			OxygenPlayer oxygenPlayer = new OxygenPlayer(player.getName());
 			String locationName = args[2];
-
-			boolean remove = args[1].equalsIgnoreCase("remove");
-
 			HomeService.get().getSessionHandler().getSession(player.getName()).set("selectionStatus", "1");
 			HomeService.get().getSessionHandler().getSession(player.getName()).set("locationName", locationName);
 
+			ItemStack selectionItem = new ItemStack(Material.BLAZE_ROD);
+
+			oxygenPlayer.give(selectionItem);
+
 			String message = p.getFirstColor() + "Select first border pos";
+
+			message(player, message);
+			return;
+		}
+
+		// /admin location remove [name]
+		if (args[1].equalsIgnoreCase("remove")) {
+			if (args.length == 2) {
+				message(sender, p.getColor(3) + "[!] Missing [name] argument!");
+				return;
+			}
+			Player player = (Player) sender;
+			String locationName = args[2];
+			
+			HashMap<String, HomeLocation> locations = HomeService.get().getLocationService().getLocations();
+			if (!locations.containsKey(locationName)) {
+				message(player, p.getColor(3) + "[!] Location not found!");
+				return;
+			}
+			
+			HomeService.get().getLocationService().removeLocation(locationName);
+
+			String message = p.getFirstColor() + "Location successfuly removed";
 
 			message(player, message);
 			return;
@@ -177,19 +200,18 @@ public class AdminCommand extends HomeCommand {
 
 			Player player = Bukkit.getPlayer(playerName);
 
-			String worldName = player.getWorld().getName();
 			String locationName = args[2];
-			String path = String.format("locations.%s", locationName);
 
-			DataContainer container = getWorldContainer(worldName);
+			HashMap<String, HomeLocation> locations = HomeService.get().getLocationService().getLocations();
 
-			if (!container.isSet(path)) {
+			if (!locations.containsKey(locationName)) {
 				message(player, p.getColor(3) + "[!] Location not found!");
 				return;
 			}
 
-			String serializedLocation = container.get(path);
-			Location location = DataUtilities.deserializeLocation(serializedLocation);
+			HomeLocation homeLocation = locations.get(locationName);
+
+			Location location = homeLocation.getSpawnPoint().add(0, 1, 0);
 
 			player.teleport(location);
 			player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1f, 1f);
@@ -198,26 +220,23 @@ public class AdminCommand extends HomeCommand {
 
 		// /admin location list
 		if (args[1].equalsIgnoreCase("list") || args[1].equalsIgnoreCase("l")) {
-			Player player = (Player) sender;
 
 			message(sender, " ");
 			message(sender, getDivider());
 			message(sender, p.getFirstColor() + "§lList:");
 
-			DataContainer container = getWorldContainer(player.getWorld().getName());
+			HashMap<String, HomeLocation> locations = HomeService.get().getLocationService().getLocations();
 
-			if (container.getData().isEmpty()) {
+			if (locations.isEmpty()) {
 				message(sender, p.getSecondColor() + "- Empty");
 				return;
 			}
 
-			for (String locationName : container.getData().keySet()) {
+			for (String locationName : locations.keySet()) {
 				if (locationName == null)
 					continue;
-				if (!locationName.startsWith("locations."))
-					continue;
 
-				message(sender, p.getSecondColor() + "- " + locationName.replaceFirst("locations.", ""));
+				message(sender, p.getSecondColor() + "- " + locationName);
 			}
 
 			return;
@@ -225,15 +244,6 @@ public class AdminCommand extends HomeCommand {
 	}
 
 	// - Miscellaneous methods
-	private DataContainer getWorldContainer(String worldName) {
-		WorldHandler worldHandler = HomeService.get().getWorldHandler();
-		return worldHandler.getWorldData(worldName);
-	}
-
-	private void saveWorldContainer(String worldName, DataContainer container) {
-		WorldHandler worldHandler = HomeService.get().getWorldHandler();
-		worldHandler.setWorldData(worldName, container);
-	}
 
 	private void message(CommandSender sender, String message) {
 		MessageUtilities.sendMessage(sender, message);

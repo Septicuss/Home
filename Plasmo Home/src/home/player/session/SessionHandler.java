@@ -21,6 +21,10 @@ public class SessionHandler {
 		sessions.put(playerName, session);
 		return session;
 	}
+	
+	public boolean isExist(String playerName) {
+		return this.sessions.containsKey(playerName);
+	}
 
 	public void updateSession(String playerName, Session updatedSession) {
 		sessions.put(playerName, updatedSession);
