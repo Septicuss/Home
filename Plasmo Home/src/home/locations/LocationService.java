@@ -5,9 +5,11 @@ import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import oxygen.Oxygen;
 import oxygen.objects.Cuboid;
+import oxygen.player.OxygenPlayer;
 import oxygen.utilities.DataUtilities;
 import oxygen.utilities.FileUtilities;
 
@@ -41,6 +43,25 @@ public class LocationService {
 	public void removeLocation(String locName) {
 		this.locations.remove(locName);
 		removeLocFromData(locName);
+	}
+
+	// interact with player
+	public void teleport(Player player, String homeLocationName) {
+		if (!isExist(homeLocationName))
+			return;
+
+		HomeLocation homeLoc = locations.get(homeLocationName);
+		Location location = homeLoc.getSpawnPoint().add(0, 1, 0);
+		player.teleport(location);
+
+		OxygenPlayer oPlayer = Oxygen.get().getOxygenPlayerService().get(player.getName());
+		oPlayer.set("homeLocation", homeLocationName);
+		Oxygen.get().getOxygenPlayerService().save(oPlayer, true);
+	}
+
+	// utils
+	public boolean isExist(String homeLocationName) {
+		return this.locations.containsKey(homeLocationName);
 	}
 
 	// load/save

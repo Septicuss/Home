@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import home.HomeService;
 import home.commands.HomeCommand;
 import home.locations.HomeLocation;
+import home.locations.LocationService;
 import oxygen.objects.ColorPalette;
 import oxygen.player.OxygenPlayer;
 import oxygen.utilities.MessageUtilities;
@@ -169,13 +170,13 @@ public class AdminCommand extends HomeCommand {
 			}
 			Player player = (Player) sender;
 			String locationName = args[2];
-			
+
 			HashMap<String, HomeLocation> locations = HomeService.get().getLocationService().getLocations();
 			if (!locations.containsKey(locationName)) {
 				message(player, p.getColor(3) + "[!] Location not found!");
 				return;
 			}
-			
+
 			HomeService.get().getLocationService().removeLocation(locationName);
 
 			String message = p.getFirstColor() + "Location successfuly removed";
@@ -202,18 +203,14 @@ public class AdminCommand extends HomeCommand {
 
 			String locationName = args[2];
 
-			HashMap<String, HomeLocation> locations = HomeService.get().getLocationService().getLocations();
+			LocationService locService = HomeService.get().getLocationService();
 
-			if (!locations.containsKey(locationName)) {
+			if (!locService.isExist(locationName)) {
 				message(player, p.getColor(3) + "[!] Location not found!");
 				return;
 			}
 
-			HomeLocation homeLocation = locations.get(locationName);
-
-			Location location = homeLocation.getSpawnPoint().add(0, 1, 0);
-
-			player.teleport(location);
+			locService.teleport(player, locationName);
 			player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1f, 1f);
 			return;
 		}

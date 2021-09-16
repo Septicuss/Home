@@ -74,6 +74,32 @@ public class Cuboid implements Cloneable, ConfigurationSerializable, Iterable<Bl
 		return vector != null && vector.isInAABB(this.minimumPoint, this.maximumPoint);
 	}
 
+	public Vector vectorFromLocToCuboid(Location location) {
+		double x = location.getX(), y = location.getY(), z = location.getZ();
+
+		double x1 = getLowerX();
+		double x2 = getUpperX();
+		double y1 = getLowerY();
+		double y2 = getUpperY();
+		double z1 = getLowerZ();
+		double z2 = getUpperZ();
+
+		double xx = 0;
+		double zz = 0;
+		if (x <= x1) {
+			xx = x1 - x + 0.5;
+		} else if (x >= x2) {
+			xx = x2 - x - 0.5;
+		}
+		if (z <= z1) {
+			zz = z1 - z + 0.5;
+		} else if (z >= z2) {
+			zz = z2 - z - 0.5;
+		}
+		Vector vector = new Vector(xx, 0, zz);
+		return vector;
+	}
+
 	public List<Block> getBlocks() {
 		List<Block> blockList = new ArrayList<>();
 		World world = this.getWorld();

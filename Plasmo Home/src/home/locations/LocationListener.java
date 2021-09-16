@@ -9,11 +9,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.util.Vector;
 
 import home.HomeService;
 import home.player.session.Session;
 import oxygen.Oxygen;
 import oxygen.objects.Cuboid;
+import oxygen.player.OxygenPlayer;
 import oxygen.utilities.DataUtilities;
 
 public class LocationListener implements Listener {
@@ -23,6 +26,36 @@ public class LocationListener implements Listener {
 	public LocationListener(Oxygen plugin, LocationService service) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.service = service;
+	}
+
+	@EventHandler
+	public void onMove(PlayerMoveEvent e) {
+		Player player = e.getPlayer();
+
+		Location location = e.getTo();
+
+		OxygenPlayer oPlayer = Oxygen.get().getOxygenPlayerService().get(player.getName());
+
+		String homeLocationName = oPlayer.get("homeLocation");
+		HomeLocation homeLoc = service.getLocations().get(homeLocationName);
+
+		Cuboid border = homeLoc.getBorder();
+		
+		if(location.getY()<border.getLowerY()) {
+			service.teleport(player, homeLocationName);
+		}
+		
+		if (!border.containsLocation(location)) {
+			if (!(oPlayer.get("pushed") == "1")) {
+				Vector velocity = border.vectorFromLocToCuboid(location);
+				player.setVelocity(velocity);
+				oPlayer.set("pushed", "1");
+			}
+		} else {
+			oPlayer.set("pushed", "0");
+		}
+		Oxygen.get().getOxygenPlayerService().save(oPlayer, true);
+
 	}
 
 	@EventHandler
@@ -39,10 +72,10 @@ public class LocationListener implements Listener {
 			return;
 		if (e.getItem() == null)
 			return;
-		
+
 		if (!(e.getItem().getType() == Material.BLAZE_ROD))
 			return;
-	
+
 		if (!session.isSet("selectionStatus")) {
 			player.sendMessage("You are gay");
 			e.getItem().setAmount(0);
