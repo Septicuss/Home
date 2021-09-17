@@ -51,7 +51,7 @@ public class LocationService {
 			return;
 
 		HomeLocation homeLoc = locations.get(homeLocationName);
-		Location location = homeLoc.getSpawnPoint().add(0, 1, 0);
+		Location location = homeLoc.getSpawnPoint();
 		player.teleport(location);
 
 		OxygenPlayer oPlayer = Oxygen.get().getOxygenPlayerService().get(player.getName());

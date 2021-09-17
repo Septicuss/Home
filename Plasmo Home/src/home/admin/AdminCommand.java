@@ -17,6 +17,7 @@ import home.HomeService;
 import home.commands.HomeCommand;
 import home.locations.HomeLocation;
 import home.locations.LocationService;
+import oxygen.Oxygen;
 import oxygen.objects.ColorPalette;
 import oxygen.player.OxygenPlayer;
 import oxygen.utilities.MessageUtilities;
@@ -235,6 +236,24 @@ public class AdminCommand extends HomeCommand {
 
 				message(sender, p.getSecondColor() + "- " + locationName);
 			}
+
+			return;
+		}
+		// /admin location ignoreBorders
+		if (args[1].equalsIgnoreCase("ignoreBorders")) {
+
+			Player player = (Player) sender;
+			OxygenPlayer oPlayer = Oxygen.get().getOxygenPlayerService().get(player.getName());
+
+			if (oPlayer.get("ignoreBorders") == null) {
+				oPlayer.set("ignoreBorders", "1");
+				message(sender, p.getFirstColor() + "now borders dont pushes you");
+			}
+			else {
+				oPlayer.set("ignoreBorders", null);
+				message(sender, p.getFirstColor() + "now borders pushes you");
+			}
+
 
 			return;
 		}

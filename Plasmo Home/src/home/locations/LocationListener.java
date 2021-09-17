@@ -39,7 +39,12 @@ public class LocationListener implements Listener {
 
 		OxygenPlayer oPlayer = Oxygen.get().getOxygenPlayerService().get(player.getName());
 
+		if (!(oPlayer.get("ignoreBorders") == null))
+			return;
+
 		String homeLocationName = oPlayer.get("homeLocation");
+		if (!service.isExist(homeLocationName))
+			return;
 		HomeLocation homeLoc = service.getLocations().get(homeLocationName);
 
 		Cuboid border = homeLoc.getBorder();
@@ -114,6 +119,7 @@ public class LocationListener implements Listener {
 			HomeService.get().getSessionHandler().clearSession(player.getName());
 
 			player.sendMessage("Location successfully created");
+			service.teleport(player, location.getName());
 		}
 
 	}
