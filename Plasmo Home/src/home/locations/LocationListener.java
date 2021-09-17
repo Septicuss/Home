@@ -33,6 +33,9 @@ public class LocationListener implements Listener {
 		Player player = e.getPlayer();
 
 		Location location = e.getTo();
+		Location locFrom = e.getFrom();
+		if (!location.getBlock().equals(locFrom.getBlock()))
+			return;
 
 		OxygenPlayer oPlayer = Oxygen.get().getOxygenPlayerService().get(player.getName());
 
@@ -40,21 +43,19 @@ public class LocationListener implements Listener {
 		HomeLocation homeLoc = service.getLocations().get(homeLocationName);
 
 		Cuboid border = homeLoc.getBorder();
-		
-		if(location.getY()<border.getLowerY()) {
+
+		if (location.getY() < border.getLowerY()) {
 			service.teleport(player, homeLocationName);
 		}
-		
+
 		if (!border.containsLocation(location)) {
-			if (!(oPlayer.get("pushed") == "1")) {
-				Vector velocity = border.vectorFromLocToCuboid(location);
-				player.setVelocity(velocity);
-				oPlayer.set("pushed", "1");
-			}
-		} else {
-			oPlayer.set("pushed", "0");
+
+			Vector corrector = new Vector(0, 0.1, 0);
+
+			Vector velocity = border.vectorFromLocToCuboid(location).add(corrector);
+			player.setVelocity(velocity);
+
 		}
-		Oxygen.get().getOxygenPlayerService().save(oPlayer, true);
 
 	}
 
