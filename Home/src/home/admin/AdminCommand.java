@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import home.HomeService;
+import home.Home;
 import home.commands.HomeCommand;
 import home.locations.HomeLocation;
 import home.locations.LocationService;
@@ -151,8 +151,8 @@ public class AdminCommand extends HomeCommand {
 			Player player = (Player) sender;
 			OxygenPlayer oxygenPlayer = new OxygenPlayer(player.getName());
 			String locationName = args[2];
-			HomeService.get().getSessionHandler().getSession(player.getName()).set("selectionStatus", "1");
-			HomeService.get().getSessionHandler().getSession(player.getName()).set("locationName", locationName);
+			Home.get().getSessionHandler().getSession(player.getName()).set("selectionStatus", "1");
+			Home.get().getSessionHandler().getSession(player.getName()).set("locationName", locationName);
 
 			ItemStack selectionItem = new ItemStack(Material.BLAZE_ROD);
 
@@ -173,13 +173,13 @@ public class AdminCommand extends HomeCommand {
 			Player player = (Player) sender;
 			String locationName = args[2];
 
-			HashMap<String, HomeLocation> locations = HomeService.get().getLocationService().getLocations();
+			HashMap<String, HomeLocation> locations = Home.get().getLocationService().getLocations();
 			if (!locations.containsKey(locationName)) {
 				message(player, p.getColor(3) + "[!] Location not found!");
 				return;
 			}
 
-			HomeService.get().getLocationService().removeLocation(locationName);
+			Home.get().getLocationService().removeLocation(locationName);
 
 			String message = p.getFirstColor() + "Location successfuly removed";
 
@@ -205,7 +205,7 @@ public class AdminCommand extends HomeCommand {
 
 			String locationName = args[2];
 
-			LocationService locService = HomeService.get().getLocationService();
+			LocationService locService = Home.get().getLocationService();
 
 			if (!locService.exists(locationName)) {
 				message(player, p.getColor(3) + "[!] Location not found!");
@@ -224,7 +224,7 @@ public class AdminCommand extends HomeCommand {
 			message(sender, getDivider());
 			message(sender, p.getFirstColor() + ChatColor.BOLD + "List:");
 
-			HashMap<String, HomeLocation> locations = HomeService.get().getLocationService().getLocations();
+			HashMap<String, HomeLocation> locations = Home.get().getLocationService().getLocations();
 
 			if (locations.isEmpty()) {
 				message(sender, p.getSecondColor() + "- Empty");

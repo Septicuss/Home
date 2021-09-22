@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import home.HomeService;
+import home.Home;
 import home.player.session.Session;
 import oxygen.Oxygen;
 import oxygen.menu.MenuService;
@@ -22,7 +22,7 @@ public class PlayerMenuListener implements Listener {
 		event.setCancelled(true);
 
 		Player player = event.getPlayer();
-		Session session = HomeService.get().getSessionHandler().getSession(player.getName());
+		Session session = Home.get().getSessionHandler().getSession(player.getName());
 
 		if (session.isSet("menu-locked"))
 			return;

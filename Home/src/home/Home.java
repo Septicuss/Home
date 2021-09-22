@@ -10,26 +10,26 @@ import oxygen.Oxygen;
 /**
  * Register all services used in the "home" package here.
  */
-public class HomeService {
+public class Home {
 
-	private static HomeService instance;
+	private static Home instance;
 	private CommandHandler commandHandler;
 	private SessionHandler sessionHandler;
 	private WorldHandler worldHandler;
 	private LocationService locationService;
 
-	public HomeService(Oxygen plugin) {
+	public Home(Oxygen plugin) {
 
 		instance = this;
 		commandHandler = new CommandHandler(plugin);
 		sessionHandler = new SessionHandler();
 		worldHandler = new WorldHandler(plugin);
 		locationService = new LocationService(plugin);
-		
+
 		new PlayerMenuListener(plugin);
 	}
 
-	public static HomeService get() {
+	public static Home get() {
 		return instance;
 	}
 
@@ -44,10 +44,9 @@ public class HomeService {
 	public WorldHandler getWorldHandler() {
 		return worldHandler;
 	}
-	
+
 	public LocationService getLocationService() {
 		return locationService;
 	}
-
 
 }

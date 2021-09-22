@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
-import home.HomeService;
+import home.Home;
 import home.player.session.Session;
 import oxygen.Oxygen;
 import oxygen.objects.Cuboid;
@@ -69,9 +69,9 @@ public class LocationListener implements Listener {
 
 		Player player = e.getPlayer();
 
-		if (!HomeService.get().getSessionHandler().isExist(player.getName()))
+		if (!Home.get().getSessionHandler().isExist(player.getName()))
 			return;
-		Session session = HomeService.get().getSessionHandler().getSession(player.getName());
+		Session session = Home.get().getSessionHandler().getSession(player.getName());
 		int selectionStatus = Integer.parseInt(session.get("selectionStatus"));
 
 		if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK))
@@ -116,7 +116,7 @@ public class LocationListener implements Listener {
 			service.setLocations(locations);
 
 			e.getItem().setAmount(0);
-			HomeService.get().getSessionHandler().clearSession(player.getName());
+			Home.get().getSessionHandler().clearSession(player.getName());
 
 			player.sendMessage("Location successfully created");
 			service.teleport(player, location.getName());
