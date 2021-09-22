@@ -14,8 +14,8 @@ import oxygen.utilities.DataUtilities;
 import oxygen.utilities.FileUtilities;
 
 /**
- * A service responsible for managing HomeLocations, teleportation and
- * data handling.
+ * A service responsible for managing HomeLocations, teleportation and data
+ * handling.
  */
 public class LocationService {
 
@@ -31,26 +31,30 @@ public class LocationService {
 
 	}
 
-	// getters/setters
+	// HOME LOCATIONS
 
-	// homeLocs
-	public HashMap<String, HomeLocation> getLocations() {
-		return locations;
-	}
-
-	public void setLocations(HashMap<String, HomeLocation> locs) {
-		this.locations = locs;
+	public void addLocation(HomeLocation homeLocation) {
+		this.locations.put(homeLocation.getName(), homeLocation);
 		saveLocations(locations);
 	}
 
-	public void removeLocation(String locName) {
-		this.locations.remove(locName);
-		deleteLocation(locName);
+	public void removeLocation(String locationName) {
+		this.locations.remove(locationName);
+		deleteLocation(locationName);
+	}
+
+	public HomeLocation getLocation(String homeLocationName) {
+		return locations.get(homeLocationName);
+	}
+
+	public boolean locationExists(String homeLocationName) {
+		return this.locations.containsKey(homeLocationName);
 	}
 
 	// interact with player
+
 	public void teleport(Player player, String homeLocationName) {
-		if (!exists(homeLocationName))
+		if (!locationExists(homeLocationName))
 			return;
 
 		HomeLocation homeLoc = locations.get(homeLocationName);
@@ -62,12 +66,8 @@ public class LocationService {
 		Oxygen.get().getOxygenPlayerService().save(oPlayer, true);
 	}
 
-	// utils
-	public boolean exists(String homeLocationName) {
-		return this.locations.containsKey(homeLocationName);
-	}
-
 	// load/save
+	
 	private HashMap<String, HomeLocation> loadLocations() {
 
 		FileConfiguration data = fileUtilities.getFileConfiguration(fileName);

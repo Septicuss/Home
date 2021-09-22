@@ -1,7 +1,5 @@
 package home.locations;
 
-import java.util.HashMap;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -43,9 +41,9 @@ public class LocationListener implements Listener {
 			return;
 
 		String homeLocationName = oPlayer.get("homeLocation");
-		if (!service.exists(homeLocationName))
+		if (!service.locationExists(homeLocationName))
 			return;
-		HomeLocation homeLoc = service.getLocations().get(homeLocationName);
+		HomeLocation homeLoc = service.getLocation(homeLocationName);
 
 		Cuboid border = homeLoc.getBorder();
 
@@ -109,17 +107,15 @@ public class LocationListener implements Listener {
 			Cuboid border = new Cuboid((Location) DataUtilities.deserializeLocation(session.get("loc1")),
 					(Location) DataUtilities.deserializeLocation(session.get("loc2")));
 
-			HomeLocation location = new HomeLocation(session.get("locationName"), border, spawnLoc);
+			HomeLocation newHomeLocation = new HomeLocation(session.get("locationName"), border, spawnLoc);
 
-			HashMap<String, HomeLocation> locations = service.getLocations();
-			locations.put(session.get("locationName"), location);
-			service.setLocations(locations);
+			service.addLocation(newHomeLocation);
 
 			e.getItem().setAmount(0);
 			Home.get().getSessionHandler().clearSession(player.getName());
 
 			player.sendMessage("Location successfully created");
-			service.teleport(player, location.getName());
+			service.teleport(player, newHomeLocation.getName());
 		}
 
 	}
