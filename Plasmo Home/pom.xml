@@ -22,7 +22,7 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.3.1</version>
 				<configuration>
-					<outputDirectory>C:\Users\vbala\Desktop\Plasmo Home\plugins</outputDirectory>
+					<outputDirectory>ПУТЬ К ПАПКЕ ПЛАГИНОВ</outputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
