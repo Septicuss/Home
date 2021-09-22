@@ -75,12 +75,10 @@ public class Cuboid implements Cloneable, ConfigurationSerializable, Iterable<Bl
 	}
 
 	public Vector vectorFromLocToCuboid(Location location) {
-		double x = location.getX(), y = location.getY(), z = location.getZ();
+		double x = location.getX(), z = location.getZ();
 
 		double x1 = getLowerX();
 		double x2 = getUpperX();
-		double y1 = getLowerY();
-		double y2 = getUpperY();
 		double z1 = getLowerZ();
 		double z2 = getUpperZ();
 
