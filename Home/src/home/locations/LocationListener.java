@@ -43,7 +43,7 @@ public class LocationListener implements Listener {
 			return;
 
 		String homeLocationName = oPlayer.get("homeLocation");
-		if (!service.isExist(homeLocationName))
+		if (!service.exists(homeLocationName))
 			return;
 		HomeLocation homeLoc = service.getLocations().get(homeLocationName);
 

@@ -17,6 +17,7 @@ import home.HomeService;
 import home.commands.HomeCommand;
 import home.locations.HomeLocation;
 import home.locations.LocationService;
+import net.md_5.bungee.api.ChatColor;
 import oxygen.Oxygen;
 import oxygen.objects.ColorPalette;
 import oxygen.player.OxygenPlayer;
@@ -36,7 +37,7 @@ public class AdminCommand extends HomeCommand {
 		if (args.length == 0) {
 			message(sender, " ");
 			message(sender, getDivider());
-			message(sender, p.getFirstColor() + "§lAdmin Help");
+			message(sender, p.getFirstColor() + ChatColor.BOLD + "Admin Help");
 			message(sender, p.getFirstColor() + "/admin " + p.getSecondColor() + "location ...");
 			message(sender, p.getFirstColor() + "/admin " + p.getSecondColor() + "world ...");
 			message(sender, getDivider());
@@ -64,7 +65,7 @@ public class AdminCommand extends HomeCommand {
 		if (args.length == 1) {
 			message(sender, " ");
 			message(sender, getDivider());
-			message(sender, p.getFirstColor() + "§lWorld Help");
+			message(sender, p.getFirstColor() + ChatColor.BOLD + "World Help");
 			message(sender, p.getFirstColor() + "/...world " + p.getSecondColor() + "teleport [name] (player)");
 			message(sender, p.getFirstColor() + "/...world " + p.getSecondColor() + "list");
 			message(sender, getDivider());
@@ -113,7 +114,7 @@ public class AdminCommand extends HomeCommand {
 		if (args[1].equalsIgnoreCase("list") || args[1].equalsIgnoreCase("l")) {
 			message(sender, " ");
 			message(sender, getDivider());
-			message(sender, p.getFirstColor() + "§lList:");
+			message(sender, p.getFirstColor() + ChatColor.BOLD + "List:");
 
 			List<World> worlds = Bukkit.getWorlds();
 			for (World world : worlds) {
@@ -131,7 +132,7 @@ public class AdminCommand extends HomeCommand {
 		if (args.length == 1) {
 			message(sender, " ");
 			message(sender, getDivider());
-			message(sender, p.getFirstColor() + "§lLocation Help [These commands are world specific!]");
+			message(sender, p.getFirstColor() + ChatColor.BOLD + "Location Help [These commands are world specific!]");
 			message(sender, p.getFirstColor() + "/...location " + p.getSecondColor() + "create [name]");
 			message(sender, p.getFirstColor() + "/...location " + p.getSecondColor() + "remove [name]");
 			message(sender, p.getFirstColor() + "/...location " + p.getSecondColor() + "teleport [name] (player)");
@@ -206,7 +207,7 @@ public class AdminCommand extends HomeCommand {
 
 			LocationService locService = HomeService.get().getLocationService();
 
-			if (!locService.isExist(locationName)) {
+			if (!locService.exists(locationName)) {
 				message(player, p.getColor(3) + "[!] Location not found!");
 				return;
 			}
@@ -221,7 +222,7 @@ public class AdminCommand extends HomeCommand {
 
 			message(sender, " ");
 			message(sender, getDivider());
-			message(sender, p.getFirstColor() + "§lList:");
+			message(sender, p.getFirstColor() + ChatColor.BOLD + "List:");
 
 			HashMap<String, HomeLocation> locations = HomeService.get().getLocationService().getLocations();
 
@@ -248,12 +249,10 @@ public class AdminCommand extends HomeCommand {
 			if (oPlayer.get("ignoreBorders") == null) {
 				oPlayer.set("ignoreBorders", "1");
 				message(sender, p.getFirstColor() + "now borders dont pushes you");
-			}
-			else {
+			} else {
 				oPlayer.set("ignoreBorders", null);
 				message(sender, p.getFirstColor() + "now borders pushes you");
 			}
-
 
 			return;
 		}

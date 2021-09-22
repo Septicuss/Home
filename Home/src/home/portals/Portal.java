@@ -18,11 +18,11 @@ public class Portal {
 		return position;
 	}
 
-	public String homeLocationName() {
+	public String getHomeLocationName() {
 		return homeLocationName;
 	}
 
-	public void sethomeLocationName(String homeLocationName) {
+	public void setHomeLocationName(String homeLocationName) {
 		this.homeLocationName = homeLocationName;
 	}
 

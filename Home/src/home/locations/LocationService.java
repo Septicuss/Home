@@ -13,16 +13,19 @@ import oxygen.player.OxygenPlayer;
 import oxygen.utilities.DataUtilities;
 import oxygen.utilities.FileUtilities;
 
+/**
+ * A service responsible for managing HomeLocations, teleportation and
+ * data handling.
+ */
 public class LocationService {
 
+	private static final String fileName = "locations";
 	private FileUtilities fileUtilities;
 	private HashMap<String, HomeLocation> locations;
-	private String fileName;
 
 	public LocationService(Oxygen plugin) {
 
 		fileUtilities = plugin.getFileUtilities();
-		fileName = "locations";
 		locations = loadLocations();
 		new LocationListener(plugin, this);
 
@@ -42,12 +45,12 @@ public class LocationService {
 
 	public void removeLocation(String locName) {
 		this.locations.remove(locName);
-		removeLocFromData(locName);
+		deleteLocation(locName);
 	}
 
 	// interact with player
 	public void teleport(Player player, String homeLocationName) {
-		if (!isExist(homeLocationName))
+		if (!exists(homeLocationName))
 			return;
 
 		HomeLocation homeLoc = locations.get(homeLocationName);
@@ -60,7 +63,7 @@ public class LocationService {
 	}
 
 	// utils
-	public boolean isExist(String homeLocationName) {
+	public boolean exists(String homeLocationName) {
 		return this.locations.containsKey(homeLocationName);
 	}
 
@@ -111,7 +114,7 @@ public class LocationService {
 		fileUtilities.saveFileConfiguration("locations", data);
 	}
 
-	private void removeLocFromData(String locName) {
+	private void deleteLocation(String locName) {
 
 		FileConfiguration data = fileUtilities.getFileConfiguration(fileName);
 		data.getConfigurationSection("locations").set(locName, null);
