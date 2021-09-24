@@ -207,7 +207,7 @@ public class AdminCommand extends HomeCommand {
 
 			LocationService locService = Home.get().getLocationService();
 
-			if (!locService.exists(locationName)) {
+			if (!locService.locationExists(locationName)) {
 				message(player, p.getColor(3) + "[!] Location not found!");
 				return;
 			}

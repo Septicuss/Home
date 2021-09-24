@@ -50,6 +50,12 @@ public class LocationService {
 	public boolean locationExists(String homeLocationName) {
 		return this.locations.containsKey(homeLocationName);
 	}
+	
+	public HashMap<String, HomeLocation> getLocations() {
+		@SuppressWarnings("unchecked")
+		HashMap<String, HomeLocation> clone = (HashMap<String, HomeLocation>) locations.clone();
+		return clone;
+	}
 
 	// interact with player
 

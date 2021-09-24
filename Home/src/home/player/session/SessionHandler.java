@@ -22,7 +22,7 @@ public class SessionHandler {
 		return session;
 	}
 	
-	public boolean isExist(String playerName) {
+	public boolean exists(String playerName) {
 		return this.sessions.containsKey(playerName);
 	}
 

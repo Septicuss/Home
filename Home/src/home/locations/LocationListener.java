@@ -63,30 +63,17 @@ public class LocationListener implements Listener {
 	}
 
 	@EventHandler
-	public void onInteract(PlayerInteractEvent e) {
+	public void onInteract(PlayerInteractEvent event) {
+		if (setInteractSkipped(event) == false) {
+			interactionHandler(event);
+		}
+	}
 
+	private void interactionHandler(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
 
-		if (!Home.get().getSessionHandler().isExist(player.getName()))
-			return;
 		Session session = Home.get().getSessionHandler().getSession(player.getName());
 		int selectionStatus = Integer.parseInt(session.get("selectionStatus"));
-
-		if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK))
-			return;
-		if (e.getItem() == null)
-			return;
-
-		if (!(e.getItem().getType() == Material.BLAZE_ROD))
-			return;
-
-		if (!session.isSet("selectionStatus")) {
-			player.sendMessage("You are gay");
-			e.getItem().setAmount(0);
-			return;
-		}
-		if (!(player.isOp()))
-			return;
 
 		if (selectionStatus == 1) {
 			Location loc1 = e.getClickedBlock().getLocation();
@@ -117,7 +104,31 @@ public class LocationListener implements Listener {
 			player.sendMessage("Location successfully created");
 			service.teleport(player, newHomeLocation.getName());
 		}
+	}
 
+	private boolean setInteractSkipped(PlayerInteractEvent e) {
+		Player player = e.getPlayer();
+
+		if (!Home.get().getSessionHandler().exists(player.getName()))
+			return true;
+
+		Session session = Home.get().getSessionHandler().getSession(player.getName());
+
+		if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK))
+			return true;
+		if (e.getItem() == null)
+			return true;
+		if (!(e.getItem().getType() == Material.BLAZE_ROD))
+			return true;
+		if (!session.isSet("selectionStatus")) {
+			player.sendMessage("You are gay");
+			e.getItem().setAmount(0);
+			return true;
+		}
+		if (!(player.isOp()))
+			return true;
+
+		return false;
 	}
 
 }
