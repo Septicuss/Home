@@ -1,4 +1,4 @@
-package home.locations;
+package home.objects.locations;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -94,15 +94,14 @@ public class LocationListener implements Listener {
 			Cuboid border = new Cuboid((Location) DataUtilities.deserializeLocation(session.get("loc1")),
 					(Location) DataUtilities.deserializeLocation(session.get("loc2")));
 
-			HomeLocation newHomeLocation = new HomeLocation(session.get("locationName"), border, spawnLoc);
-
-			service.addLocation(newHomeLocation);
+			service.createHomeLocation(session.get("locationName"), border, spawnLoc);
 
 			e.getItem().setAmount(0);
-			Home.get().getSessionHandler().clearSession(player.getName());
 
 			player.sendMessage("Location successfully created");
-			service.teleport(player, newHomeLocation.getName());
+			service.teleport(player, session.get("locationName"));
+			
+			Home.get().getSessionHandler().clearSession(player.getName());
 		}
 	}
 

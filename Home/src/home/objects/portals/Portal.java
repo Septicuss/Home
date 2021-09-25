@@ -1,4 +1,4 @@
-package home.portals;
+package home.objects.portals;
 
 import org.bukkit.Location;
 

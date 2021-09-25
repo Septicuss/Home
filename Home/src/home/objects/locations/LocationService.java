@@ -1,4 +1,4 @@
-package home.locations;
+package home.objects.locations;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -32,15 +32,16 @@ public class LocationService {
 	}
 
 	// HOME LOCATIONS
-
-	public void addLocation(HomeLocation homeLocation) {
+	
+	public void createHomeLocation(String name, Cuboid border, Location spawnPoint){
+		HomeLocation homeLocation = new HomeLocation(name, border, spawnPoint);
 		this.locations.put(homeLocation.getName(), homeLocation);
 		saveLocations(locations);
 	}
 
-	public void removeLocation(String locationName) {
-		this.locations.remove(locationName);
-		deleteLocation(locationName);
+	public void removeLocation(String homeLocationName) {
+		this.locations.remove(homeLocationName);
+		deleteLocation(homeLocationName);
 	}
 
 	public HomeLocation getLocation(String homeLocationName) {

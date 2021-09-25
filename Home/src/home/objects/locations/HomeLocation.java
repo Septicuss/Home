@@ -1,4 +1,4 @@
-package home.locations;
+package home.objects.locations;
 
 import org.bukkit.Location;
 
@@ -10,7 +10,7 @@ public class HomeLocation {
 	private String name;
 	private Location spawnPoint;
 
-	public HomeLocation(String name, Cuboid border, Location spawnPoint) {
+	protected HomeLocation(String name, Cuboid border, Location spawnPoint) {
 		this.name = name;
 		this.border = border;
 		this.spawnPoint = spawnPoint;

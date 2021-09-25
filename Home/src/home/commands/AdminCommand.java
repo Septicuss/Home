@@ -1,4 +1,4 @@
-package home.admin;
+package home.commands;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import home.Home;
-import home.commands.HomeCommand;
-import home.locations.HomeLocation;
-import home.locations.LocationService;
+import home.objects.locations.HomeLocation;
+import home.objects.locations.LocationService;
 import net.md_5.bungee.api.ChatColor;
 import oxygen.Oxygen;
 import oxygen.objects.ColorPalette;

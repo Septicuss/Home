@@ -1,7 +1,7 @@
 package home;
 
 import home.commands.CommandHandler;
-import home.locations.LocationService;
+import home.objects.locations.LocationService;
 import home.player.menu.PlayerMenuListener;
 import home.player.session.SessionHandler;
 import home.worlds.WorldHandler;
