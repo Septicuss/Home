@@ -1,6 +1,5 @@
 package home.commands;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -11,15 +10,11 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import home.Home;
 import home.objects.locations.HomeLocation;
-import home.objects.locations.LocationService;
 import net.md_5.bungee.api.ChatColor;
-import oxygen.Oxygen;
 import oxygen.objects.ColorPalette;
-import oxygen.player.OxygenPlayer;
 import oxygen.utilities.MessageUtilities;
 
 public class AdminCommand extends HomeCommand {
@@ -141,120 +136,130 @@ public class AdminCommand extends HomeCommand {
 			return;
 		}
 
-		// /admin location create [name]
-		if (args[1].equalsIgnoreCase("create")) {
-			if (args.length == 2) {
-				message(sender, p.getColor(3) + "[!] Missing [name] argument!");
-				return;
-			}
-			Player player = (Player) sender;
-			OxygenPlayer oxygenPlayer = new OxygenPlayer(player.getName());
-			String locationName = args[2];
-			Home.get().getSessionHandler().getSession(player.getName()).set("selectionStatus", "1");
-			Home.get().getSessionHandler().getSession(player.getName()).set("locationName", locationName);
+		Player player = (Player) sender;
 
-			ItemStack selectionItem = new ItemStack(Material.BLAZE_ROD);
+		if (args[1].equalsIgnoreCase("test")) {
+			message(player, "test");
 
-			oxygenPlayer.give(selectionItem);
-
-			String message = p.getFirstColor() + "Select first border pos";
-
-			message(player, message);
-			return;
+			HomeLocation homeLocation = new HomeLocation(args[2], player.getLocation());
+			Home.get().getLocationHandler().addHomeLocation(homeLocation);
+			Home.get().getLocationHandler().save();
 		}
 
-		// /admin location remove [name]
-		if (args[1].equalsIgnoreCase("remove")) {
-			if (args.length == 2) {
-				message(sender, p.getColor(3) + "[!] Missing [name] argument!");
-				return;
-			}
-			Player player = (Player) sender;
-			String locationName = args[2];
+//		// /admin location create [name]
+//		if (args[1].equalsIgnoreCase("create")) {
+//			if (args.length == 2) {
+//				message(sender, p.getColor(3) + "[!] Missing [name] argument!");
+//				return;
+//			}
+//			Player player = (Player) sender;
+//			OxygenPlayer oxygenPlayer = new OxygenPlayer(player.getName());
+//			String locationName = args[2];
+//			Home.get().getSessionHandler().getSession(player.getName()).set("selectionStatus", "1");
+//			Home.get().getSessionHandler().getSession(player.getName()).set("locationName", locationName);
+//
+//			ItemStack selectionItem = new ItemStack(Material.BLAZE_ROD);
+//
+//			oxygenPlayer.give(selectionItem);
+//
+//			String message = p.getFirstColor() + "Select first border pos";
+//
+//			message(player, message);
+//			return;
+//		}
 
-			HashMap<String, HomeLocation> locations = Home.get().getLocationService().getLocations();
-			if (!locations.containsKey(locationName)) {
-				message(player, p.getColor(3) + "[!] Location not found!");
-				return;
-			}
-
-			Home.get().getLocationService().removeLocation(locationName);
-
-			String message = p.getFirstColor() + "Location successfuly removed";
-
-			message(player, message);
-			return;
-		}
-
-		// /admin location teleport [name] (player)
-		if (args[1].equalsIgnoreCase("teleport") || args[1].equalsIgnoreCase("tp")) {
-			if (args.length == 2) {
-				message(sender, p.getColor(3) + "[!] Missing [name] argument!");
-				return;
-			}
-
-			String playerName = args.length >= 4 ? args[3] : sender.getName();
-
-			if (Bukkit.getPlayer(playerName) == null) {
-				message(sender, p.getColor(3) + "[!] Player not found!");
-				return;
-			}
-
-			Player player = Bukkit.getPlayer(playerName);
-
-			String locationName = args[2];
-
-			LocationService locService = Home.get().getLocationService();
-
-			if (!locService.locationExists(locationName)) {
-				message(player, p.getColor(3) + "[!] Location not found!");
-				return;
-			}
-
-			locService.teleport(player, locationName);
-			player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1f, 1f);
-			return;
-		}
-
-		// /admin location list
-		if (args[1].equalsIgnoreCase("list") || args[1].equalsIgnoreCase("l")) {
-
-			message(sender, " ");
-			message(sender, getDivider());
-			message(sender, p.getFirstColor() + ChatColor.BOLD + "List:");
-
-			HashMap<String, HomeLocation> locations = Home.get().getLocationService().getLocations();
-
-			if (locations.isEmpty()) {
-				message(sender, p.getSecondColor() + "- Empty");
-				return;
-			}
-
-			for (String locationName : locations.keySet()) {
-				if (locationName == null)
-					continue;
-
-				message(sender, p.getSecondColor() + "- " + locationName);
-			}
-
-			return;
-		}
-		// /admin location ignoreBorders
-		if (args[1].equalsIgnoreCase("ignoreBorders")) {
-
-			Player player = (Player) sender;
-			OxygenPlayer oPlayer = Oxygen.get().getOxygenPlayerService().get(player.getName());
-
-			if (oPlayer.get("ignoreBorders") == null) {
-				oPlayer.set("ignoreBorders", "1");
-				message(sender, p.getFirstColor() + "now borders dont pushes you");
-			} else {
-				oPlayer.set("ignoreBorders", null);
-				message(sender, p.getFirstColor() + "now borders pushes you");
-			}
-
-			return;
-		}
+//		// /admin location remove [name]
+//		if (args[1].equalsIgnoreCase("remove")) {
+//			if (args.length == 2) {
+//				message(sender, p.getColor(3) + "[!] Missing [name] argument!");
+//				return;
+//			}
+//			Player player = (Player) sender;
+//			String locationName = args[2];
+//
+//			HashMap<String, HomeLocation> locations = Home.get().getLocationService().getLocations();
+//			if (!locations.containsKey(locationName)) {
+//				message(player, p.getColor(3) + "[!] Location not found!");
+//				return;
+//			}
+//
+//			Home.get().getLocationService().removeLocation(locationName);
+//
+//			String message = p.getFirstColor() + "Location successfuly removed";
+//
+//			message(player, message);
+//			return;
+//		}
+//
+//		// /admin location teleport [name] (player)
+//		if (args[1].equalsIgnoreCase("teleport") || args[1].equalsIgnoreCase("tp")) {
+//			if (args.length == 2) {
+//				message(sender, p.getColor(3) + "[!] Missing [name] argument!");
+//				return;
+//			}
+//
+//			String playerName = args.length >= 4 ? args[3] : sender.getName();
+//
+//			if (Bukkit.getPlayer(playerName) == null) {
+//				message(sender, p.getColor(3) + "[!] Player not found!");
+//				return;
+//			}
+//
+//			Player player = Bukkit.getPlayer(playerName);
+//
+//			String locationName = args[2];
+//
+//			LocationServiceOld locService = Home.get().getLocationService();
+//
+//			if (!locService.locationExists(locationName)) {
+//				message(player, p.getColor(3) + "[!] Location not found!");
+//				return;
+//			}
+//
+//			locService.teleport(player, locationName);
+//			player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1f, 1f);
+//			return;
+//		}
+//
+//		// /admin location list
+//		if (args[1].equalsIgnoreCase("list") || args[1].equalsIgnoreCase("l")) {
+//
+//			message(sender, " ");
+//			message(sender, getDivider());
+//			message(sender, p.getFirstColor() + ChatColor.BOLD + "List:");
+//
+//			HashMap<String, HomeLocation> locations = Home.get().getLocationService().getLocations();
+//
+//			if (locations.isEmpty()) {
+//				message(sender, p.getSecondColor() + "- Empty");
+//				return;
+//			}
+//
+//			for (String locationName : locations.keySet()) {
+//				if (locationName == null)
+//					continue;
+//
+//				message(sender, p.getSecondColor() + "- " + locationName);
+//			}
+//
+//			return;
+//		}
+//		// /admin location ignoreBorders
+//		if (args[1].equalsIgnoreCase("ignoreBorders")) {
+//
+//			Player player = (Player) sender;
+//			OxygenPlayer oPlayer = Oxygen.get().getOxygenPlayerService().get(player.getName());
+//
+//			if (oPlayer.get("ignoreBorders") == null) {
+//				oPlayer.set("ignoreBorders", "1");
+//				message(sender, p.getFirstColor() + "now borders dont pushes you");
+//			} else {
+//				oPlayer.set("ignoreBorders", null);
+//				message(sender, p.getFirstColor() + "now borders pushes you");
+//			}
+//
+//			return;	
+//		}
 	}
 
 	// - Miscellaneous methods

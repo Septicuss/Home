@@ -17,17 +17,17 @@ import oxygen.utilities.FileUtilities;
  * A service responsible for managing HomeLocations, teleportation and data
  * handling.
  */
-public class LocationService {
+public class LocationServiceOld {
 
 	private static final String fileName = "locations";
 	private FileUtilities fileUtilities;
 	private HashMap<String, HomeLocation> locations;
 
-	public LocationService(Oxygen plugin) {
+	public LocationServiceOld(Oxygen plugin) {
 
 		fileUtilities = plugin.getFileUtilities();
 		locations = loadLocations();
-		new LocationListener(plugin, this);
+		new LocationListenerOld(plugin, this);
 
 	}
 

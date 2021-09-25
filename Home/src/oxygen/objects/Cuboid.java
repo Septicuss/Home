@@ -27,6 +27,10 @@ public class Cuboid implements Cloneable, ConfigurationSerializable, Iterable<Bl
 		this(loc, loc);
 	}
 
+	public Cuboid(SimpleLocation loc1, SimpleLocation loc2) {
+		this(loc1.getLocation(), loc2.getLocation());
+	}
+
 	public Cuboid(Location loc1, Location loc2) {
 		if (loc1 != null && loc2 != null) {
 			if (loc1.getWorld() != null && loc2.getWorld() != null) {

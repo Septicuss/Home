@@ -24,6 +24,8 @@ public class Oxygen extends JavaPlugin {
 
 	private static Oxygen oxygen;
 
+	private Home home;
+
 	@Override
 	public void onEnable() {
 		oxygen = this;
@@ -40,14 +42,18 @@ public class Oxygen extends JavaPlugin {
 		itemUtilities = new ItemUtilities(instance);
 
 		// - External
-		new Home(oxygen);
+		home = new Home(oxygen);
+		home.load();
 	}
 
 	@Override
 	public void onDisable() {
+		home.unload();
+
 		oxygenPlayerService.saveAll();
 		menuService.closeMenus();
 		databaseService.closeConnection();
+
 	}
 
 	public static Oxygen get() {

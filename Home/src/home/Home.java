@@ -1,7 +1,7 @@
 package home;
 
 import home.commands.CommandHandler;
-import home.objects.locations.LocationService;
+import home.objects.locations.LocationHandler;
 import home.player.menu.PlayerMenuListener;
 import home.player.session.SessionHandler;
 import home.worlds.WorldHandler;
@@ -13,20 +13,32 @@ import oxygen.Oxygen;
 public class Home {
 
 	private static Home instance;
+
+	private Oxygen plugin;
+
 	private CommandHandler commandHandler;
 	private SessionHandler sessionHandler;
 	private WorldHandler worldHandler;
-	private LocationService locationService;
+	private LocationHandler locationHandler;
 
 	public Home(Oxygen plugin) {
-
 		instance = this;
+		this.plugin = plugin;
+	}
+
+	public void load() {
 		commandHandler = new CommandHandler(plugin);
 		sessionHandler = new SessionHandler();
 		worldHandler = new WorldHandler(plugin);
-		locationService = new LocationService(plugin);
+		locationHandler = new LocationHandler(plugin.getFileUtilities());
 
 		new PlayerMenuListener(plugin);
+
+		locationHandler.load();
+	}
+
+	public void unload() {
+		locationHandler.save();
 	}
 
 	public static Home get() {
@@ -45,8 +57,8 @@ public class Home {
 		return worldHandler;
 	}
 
-	public LocationService getLocationService() {
-		return locationService;
+	public LocationHandler getLocationHandler() {
+		return locationHandler;
 	}
 
 }

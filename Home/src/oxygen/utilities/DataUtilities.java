@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
@@ -17,6 +19,8 @@ import org.bukkit.World;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
+import oxygen.objects.SimpleLocation;
+
 public class DataUtilities {
 
 	// Variables
@@ -24,6 +28,55 @@ public class DataUtilities {
 	public final static String DELIMETER = "#";
 
 	// Locations
+
+	public static String serializeSimpleLocation(final SimpleLocation simpleLocation) {
+		if (simpleLocation == null) {
+			return null;
+		}
+
+		String world = simpleLocation.getWorldName();
+		double x = simpleLocation.getX();
+		double y = simpleLocation.getY();
+		double z = simpleLocation.getZ();
+		float yaw = simpleLocation.getYaw();
+		float pitch = simpleLocation.getPitch();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(world + DELIMETER);
+		sb.append(x + DELIMETER);
+		sb.append(y + DELIMETER);
+		sb.append(z + DELIMETER);
+		sb.append(yaw + DELIMETER);
+		sb.append(pitch);
+
+		return sb.toString();
+	}
+
+	public static SimpleLocation deserializeSimpleLocation(final String simpleLocationString) {
+		if (simpleLocationString == null) {
+			return null;
+		}
+
+		String finalDivider = DELIMETER;
+
+		if (!simpleLocationString.contains(DELIMETER))
+			finalDivider = ":";
+
+		final String[] data = simpleLocationString.split(finalDivider);
+
+		World world = Bukkit.getWorld(data[0]);
+		double x = Double.valueOf(data[1]);
+		double y = Double.valueOf(data[2]);
+		double z = Double.valueOf(data[3]);
+
+		if (data.length > 4) {
+			float yaw = Float.valueOf(data[4]);
+			float pitch = Float.valueOf(data[5]);
+			return SimpleLocation.from(new Location(world, x, y, z, yaw, pitch));
+		}
+
+		return SimpleLocation.from(new Location(world, x, y, z));
+	}
 
 	public static String serializeLocation(final Location location) {
 		if (location == null) {
@@ -75,6 +128,15 @@ public class DataUtilities {
 	}
 
 	// Numbers
+
+	public static double round(double value, int places) {
+		if (places < 0)
+			throw new IllegalArgumentException();
+
+		BigDecimal bd = BigDecimal.valueOf(value);
+		bd = bd.setScale(places, RoundingMode.HALF_UP);
+		return bd.doubleValue();
+	}
 
 	public static int getRandomNumber(int min, int max) {
 		return ThreadLocalRandom.current().nextInt(min, max + 1);

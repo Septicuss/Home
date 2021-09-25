@@ -17,11 +17,11 @@ import oxygen.objects.Cuboid;
 import oxygen.player.OxygenPlayer;
 import oxygen.utilities.DataUtilities;
 
-public class LocationListener implements Listener {
+public class LocationListenerOld implements Listener {
 
-	private LocationService service;
+	private LocationServiceOld service;
 
-	public LocationListener(Oxygen plugin, LocationService service) {
+	public LocationListenerOld(Oxygen plugin, LocationServiceOld service) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.service = service;
 	}
